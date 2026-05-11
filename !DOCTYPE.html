@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Word Test</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: "Microsoft YaHei", sans-serif;
+        }
+        body {
+            background-color: #f0f4f8;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .test-container {
+            background: white;
+            padding: 40px;
+            border-radius: 16px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            width: 100%;
+            max-width: 500px;
+        }
+        h1 {
+            color: #2196F3;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .timer {
+            font-size: 24px;
+            text-align: center;
+            margin-bottom: 20px;
+            color: #f44336;
+            font-weight: bold;
+        }
+        .score {
+            font-size: 20px;
+            text-align: center;
+            margin-bottom: 20px;
+            color: #4CAF50;
+            font-weight: bold;
+        }
+        .question {
+            margin-bottom: 25px;
+        }
+        .question p {
+            font-size: 18px;
+            margin-bottom: 10px;
+        }
+        .question input {
+            width: 100%;
+            padding: 12px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+        }
+        .submit-btn {
+            width: 100%;
+            padding: 15px;
+            font-size: 20px;
+            background-color: #2196F3;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+        .submit-btn:disabled {
+            background-color: #90caf9;
+            cursor: not-allowed;
+        }
+        .result {
+            margin-top: 20px;
+            text-align: center;
+            font-size: 20px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="test-container">
+        <h1>word test</h1>
+        <div class="timer">剩余时间：<span id="time">20</span> 秒</div>
+        <div class="score">当前得分：<span id="score">0</span>/100</div>
+
+        <div class="question">
+            <p>* 1. 现象学</p>
+            <input type="text" id="q1" placeholder="请输入英文单词">
+        </div>
+
+        <div class="question">
+            <p>* 2. 可重复性危机</p>
+            <input type="text" id="q2" placeholder="请输入英文短语">
+        </div>
+
+        <button class="submit-btn" id="submitBtn">提交</button>
+        <div class="result" id="result"></div>
+    </div>
+
+    <script>
+        // 正确答案
+        const answers = {
+            q1: "phenomenology",
+            q2: "reproducibility crisis"
+        };
+        let score = 0;
+        let timeLeft = 20;
+        let timer;
+
+        const timeEl = document.getElementById("time");
+        const scoreEl = document.getElementById("score");
+        const submitBtn = document.getElementById("submitBtn");
+        const resultEl = document.getElementById("result");
+
+        // 倒计时
+        function startTimer() {
+            timer = setInterval(() => {
+                timeLeft--;
+                timeEl.textContent = timeLeft;
+                if (timeLeft <= 0) {
+                    clearInterval(timer);
+                    submit(); // 时间到自动提交
+                }
+            }, 1000);
+        }
+
+        // 判分函数
+        function submit() {
+            clearInterval(timer);
+            submitBtn.disabled = true;
+            const q1Val = document.getElementById("q1").value.trim().toLowerCase();
+            const q2Val = document.getElementById("q2").value.trim().toLowerCase();
+
+            score = 0;
+            if (q1Val === answers.q1) score += 50;
+            if (q2Val === answers.q2) score += 50;
+
+            scoreEl.textContent = score;
+            resultEl.textContent = `测试结束！你的得分是：${score}/100`;
+            // 禁用输入框
+            document.getElementById("q1").disabled = true;
+            document.getElementById("q2").disabled = true;
+        }
+
+        // 绑定提交事件
+        submitBtn.addEventListener("click", submit);
+
+        // 页面加载后开始倒计时
+        window.onload = startTimer;
+    </script>
+</body>
+</html>
